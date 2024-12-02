@@ -1,14 +1,21 @@
 import { useSession } from "next-auth/react";
 import useTopArtistsByTimeRange from "../hooks/useTopArtistsByTimeRange";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 const TopArtists = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const accessToken = session?.accessToken;
-
+  const router = useRouter();
   const [timeRange, setTimeRange] = useState<string>("short_term");
   const { artists, loading, error } = useTopArtistsByTimeRange(accessToken, timeRange);
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/api/auth/signin");
+    }
+  }, [status, router]);
+
 
   const timeRanges = [
     { label: "Last 4 Weeks", value: "short_term" },

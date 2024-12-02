@@ -1,14 +1,20 @@
 import { useSession } from "next-auth/react";
 import useTopTracksByTimeRange from "../hooks/useTopTracksByTimeRange";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 const TopTracks = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const accessToken = session?.accessToken;
   const [timeRange, setTimeRange] = useState<string>("short_term");
+  const router = useRouter();
   const { tracks, loading, error } = useTopTracksByTimeRange(accessToken, timeRange);
-
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/api/auth/signin");
+    }
+  }, [status, router]);
   const timeRanges = [
     { label: "Last 4 Weeks", value: "short_term" },
     { label: "Last 6 Months", value: "medium_term" },
