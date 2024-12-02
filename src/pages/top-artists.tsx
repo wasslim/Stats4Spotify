@@ -56,7 +56,6 @@ const TopArtists = () => {
               width={200}
               height={250}
               className="rounded-full mx-auto mb-4"
-              style={{ aspectRatio: "1 / 1" }}
             />
             <h2 className="text-xl font-semibold">{artist.name}</h2>
           </div>
